@@ -7,50 +7,15 @@ const allItemsButton = document.getElementById('all')
 const incompletedButton = document.getElementById('incompleted')
 const clearButton = document.getElementById('clear')
 
-function getHttp (url, callback) {
-  const request = new XMLHttpRequest()
-  request.onreadystatechange = function() {
-    if (request.readyState == 4 &&request.status == 200) {
-       const data = JSON.parse(request.responseText)
-       return callback(data)
+fetch('http://localhost:3001/tasks')
+  .then(function(response) {
+    return response.json()
+  })
+  .then(function(myJson) {
+    for (let item of myJson) {
+      listMaker(item.name, item.id, item.completed)
     }
-  }
- request.open('GET', url)
- request.send()
-}
-function postHttp (url, callback, task) {
-  const request = new XMLHttpRequest()
-  request.onreadystatechange = function() {
-    if (request.readyState == 4 &&request.status == 201) {
-       const data = JSON.parse(request.responseText)
-       return callback(data)
-    }
-  }
-  request.open('POST', url)
-  request.setRequestHeader('Content-type', 'application/json')
-  request.send(JSON.stringify(task))
-}
-
-function deleteHttp (url, callback) {
-const request = new XMLHttpRequest()
-  request.onreadystatechange = function() {
-    if (request.readyState == 4 &&request.status == 201) {
-       const data = request.responseText
-       console.log(data)
-       callback(data)
-    }
-  }
- request.open('DELETE', url)
- request.send()
-}
-getHttp('http://localhost:3001/tasks', getAlltasks)
-// getAlltasks()
-
-function getAlltasks(data) {
-  for (let item of data) {
-    listMaker(item.name, item.id, item.completed)
-  }
-}
+  })
 
 
 const listMaker = (text, id, completed) => {
@@ -111,81 +76,111 @@ function Todo(name) {
   this.priorityId = 0
   this.identifier = false
 }
-addButton.addEventListener('click', abc)
-function abc () {
-  if (input.value) {
-  let taskObj = new Todo(input.value) 
-  postHttp('http://localhost:3001/tasks', addTask, taskObj)
-  }
-}
-function addTask(data) {
+addButton.addEventListener('click', function () {
   console.log('Add task...')
-  console.log(data)
-    // let taskObj = new Todo(input.value) 
-    listMaker(data.name, data.id, data.completed)
-}
-
-clearButton.addEventListener('click', abcd)
-function abcd () {
-  deleteHttp('http://localhost:3001/tasks', deleteAll)
-}
-function deleteAll () {
-  while (ul.firstChild) {
-    ul.removeChild(ul.firstChild)
+  // console.log(data)
+  if (input.value) {
+    const taskObj = new Todo(input.value) 
+    const options = {
+      method: 'POST',
+      body: JSON.stringify(taskObj),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    
+    fetch('http://localhost:3001/tasks', options)
+      .then(res => res.json())
+      .then(res => listMaker(res.name, res.id, res.completed))
   }
-}
+})
+
+clearButton.addEventListener('click', function () {
+  function deleteAll () {
+    while (ul.firstChild) {
+      ul.removeChild(ul.firstChild)
+    }
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    
+    fetch('http://localhost:3001/tasks', options)
+      .then(res => res.json())
+      .then(res => console.log('removed all tasks'))
+    // write post
+  }
+  
+})
+
 
 function checkFunction(e) {
   console.log(e.target.parentNode.parentNode.id)
   console.log(e.target.checked)
-  let value = { completed: e.target.checked, id: e.target.parentNode.parentNode.id }
+  const value = { completed: e.target.checked, id: e.target.parentNode.parentNode.id }
+  const options = {
+  method: 'POST',
+  body: JSON.stringify(value),
+  headers: {
+    'Content-Type': 'application/json'
+  }
+}
 
-  const request = new XMLHttpRequest()
-  request.onreadystatechange = function() {
-    if (request.readyState == 4 &&request.status == 200) {
-       const data = JSON.parse(request.responseText)
-       console.log(data)
-       console.log('updated completed value to true')
+fetch('http://localhost:3001/tasks/completedstate', options)
+  .then(res => res.json())
+  .then(res => console.log('updated completed value to true'))
+}
+
+
+completedButton.addEventListener('click', function () {
+  while (ul.firstChild) {
+    ul.removeChild(ul.firstChild)
+  }
+  fetch('http://localhost:3001/tasks/completedtasks')
+  .then(function(response) {
+    return response.json()
+  })
+  .then(function(myJson) {
+    console.log(myJson)
+    for (let item of myJson) {
+      listMaker(item.name, item.id, item.completed)
     }
-  }
- request.open('POST', 'http://localhost:3001/tasks/completedstate')
- request.setRequestHeader('Content-type', 'application/json')
- request.send(JSON.stringify(value))
-  
-}
+  })
+})
 
-
-completedButton.addEventListener('click', efg)
-function efg () {
+incompletedButton.addEventListener('click', function () {
   while (ul.firstChild) {
     ul.removeChild(ul.firstChild)
   }
-  getHttp('http://localhost:3001/tasks/completedtasks',completedTask)
-}
-function completedTask(data) {
-  for (let item of data) {
-    listMaker(item.name, item.id, item.completed)
-  }
-}
 
-incompletedButton.addEventListener('click', hij)
-function hij () {
-getHttp('http://localhost:3001/tasks/incompletedtasks',inCompletedTask)
-  while (ul.firstChild) {
-    ul.removeChild(ul.firstChild)
-  }
-}
-function inCompletedTask(data) {
-  for (let item of data) {
+fetch('http://localhost:3001/tasks/incompletedtasks')
+.then(function(response) {
+  return response.json()
+})
+.then(function(myJson) {
+  console.log(myJson)
+  for (let item of myJson) {
     listMaker(item.name, item.id, item.completed)
   }
-}
+})
+
+})
 
 allItemsButton.addEventListener('click', function () {
   while (ul.firstChild) {
     ul.removeChild(ul.firstChild)
   }
-  getHttp('http://localhost:3001/tasks', getAlltasks)
+  fetch('http://localhost:3001/tasks')
+  .then(function(response) {
+    return response.json()
+  })
+  .then(function(myJson) {
+    for (let item of myJson) {
+      listMaker(item.name, item.id, item.completed)
+    }
+  })
 })
 
 function editTask(e) {
@@ -206,17 +201,28 @@ function editTask(e) {
   listItem.classList.toggle('editMode')
   let changeTask = { name: label.textContent, id: listItem.id }
 
-  const request = new XMLHttpRequest()
-  request.onreadystatechange = function() {
-    if (request.readyState == 4 &&request.status == 200) {
-       const data = JSON.parse(request.responseText)
-       console.log(data)
-       console.log('updated completed value to true')
-    }
+//   const request = new XMLHttpRequest()
+//   request.onreadystatechange = function() {
+//     if (request.readyState == 4 &&request.status == 200) {
+//        const data = JSON.parse(request.responseText)
+//        console.log(data)
+//        console.log('updated completed value to true')
+//     }
+//   }
+//  request.open('POST', 'http://localhost:3001/tasks/updatedtask')
+//  request.setRequestHeader('Content-type', 'application/json')
+//  request.send(JSON.stringify(changeTask))
+const options = {
+  method: 'POST',
+  body: JSON.stringify(changeTask),
+  headers: {
+    'Content-Type': 'application/json'
   }
- request.open('POST', 'http://localhost:3001/tasks/updatedtask')
- request.setRequestHeader('Content-type', 'application/json')
- request.send(JSON.stringify(changeTask))
+}
+
+fetch('http://localhost:3001/tasks/updatedtask', options)
+  .then(res => res.json())
+  .then(res => console.log('updated task value'))
 }
 
 function deleteTask() {
