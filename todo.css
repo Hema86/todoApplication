@@ -1,0 +1,145 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-color:rgba(135, 183, 228, 1)
+}
+.left{
+    display: flex;
+    /* align-items: flex-start; */
+    justify-content: flex-start;  
+}
+.mid{
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    
+}
+.placeright{
+    display: flex;
+    /* align-items: flex-end; */
+    justify-content: flex-end;  
+}
+
+/* Edit Task */
+ul li input[type=text] {
+    display: none;
+  }
+  
+  ul li.editMode input[type=text] {
+    display: inline-block;
+
+  }
+  
+  ul li.editMode label {
+    display: none;
+  }
+.taskcontainer{
+    margin: 40px 200px;
+    display:flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* background-color:rgba(249, 249, 250, 0.95); */
+}
+.taskcontainer #texto {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    font-size: 16px;
+    /* border: 2px solid #FFF; */
+    width: 600px;
+  }
+  #addtask {
+      margin-top: 20px;
+      margin-bottom: 20px;
+  }
+ li  {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: space-between; */
+    /* margin-top: 30px; */
+    list-style-type: none;
+    padding: 10px;
+    font-size: 16px;
+    width: 600px;
+    background-color: rgb(255, 255, 255);
+    border-bottom: 1px solid black;
+ }
+ /* li{
+     display: flex;
+     justify-content: flex-end;
+ } */
+ /* #boxfortask {
+    border: 2px solid #FFF;
+    margin-top: 10px;
+} */
+/* #texto{
+    width: 100%;
+} */
+.taskpage{
+display: flex;
+flex-direction: row;
+justify-content: space-between;
+background-color:rgba(249, 249, 250, 0.95);
+height: 40px;
+}
+/* .updater{
+    right:0;
+    display: flex;
+    justify-content: flex-end;
+} */
+/* li .details{
+    display: flex;
+    justify-content: flex-end;
+} */
+/* ---------------------------------------------------- */
+
+.updateTask {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.1);
+}
+.task-editor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 1rem 1.5rem;
+    width: 24rem;
+    height: 30rem;
+    border-radius: 0.5rem;
+}
+#notes {
+    display: flex;
+    justify-content: center;
+    background-color: gray;
+}
+#tasknote {
+    border: 1px solid #888;
+    resize: none;
+    width: 15rem;
+    height: 10rem;
+}
+.close-button {
+    float: right;
+    width: 1.5rem;
+    line-height: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 0.25rem;
+    background-color: lightgray;
+}
+.close-button:hover {
+    background-color: darkgray;
+}
+.show-modal {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1.0);
+}
