@@ -34,9 +34,10 @@ let setItem = (request, response) => {
   // console.log(request.body)
   let id = shortid.generate()
   console.log(id)
-  const { name, completed } = request.body
+  const { name, completed, notes, dueDate, priority, priorityId, identifier} = request.body
   const body = {name, id, completed}
-  client.query('INSERT INTO tasks.item (name, completed, id) VALUES ($1, $2, $3)', [name, completed, id], (error, results) => {
+  client.query('INSERT INTO tasks.item (name, completed, notes, dueDate, priority, priorityId, identifier, id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', 
+  [name, completed, notes, dueDate, priority, priorityId, identifier, id], (error, results) => {
     if (error) {
       throw error
     }
@@ -56,16 +57,16 @@ let updateItemState = (request, response) => {
   response.status(201).send(results)
 })
 }
-let deleteAllItems = (request, response) => {
-    // const id = request.params.tasksId
-    // console.log(id)
-    client.query('DELETE FROM tasks.item', ((error, results, id) => {
-        if (error) {
-          throw error
-        }
-        response.status(201).json(results)
-    }))
-}
+// let deleteAllItems = (request, response) => {
+//     // const id = request.params.tasksId
+//     // console.log(id)
+//     client.query('DELETE FROM tasks.item', ((error, results, id) => {
+//         if (error) {
+//           throw error
+//         }
+//         response.status(201).json(results)
+//     }))
+// }
 let getCompletedItems = (request, response) => {
   client.query('SELECT * FROM tasks.item where completed = true', (error, results) => {
     if (error) {
@@ -95,7 +96,7 @@ let setEditedItem = (request, response) => {
 }
 
 let deleteItem = (request, response) => {
-  const id = request.params.id
+  const id = request.body.id
     console.log(id)
 
   client.query('DELETE FROM tasks.item WHERE id = $1', [id], (error, results) => {
@@ -107,4 +108,4 @@ let deleteItem = (request, response) => {
 }
 
 
-module.exports =  { getItems, setItem, deleteAllItems, updateItemState, getCompletedItems,getInCompletedItems, setEditedItem, deleteItem}
+module.exports =  { getItems, setItem, updateItemState, getCompletedItems,getInCompletedItems, setEditedItem, deleteItem}

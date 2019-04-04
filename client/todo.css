@@ -1,38 +1,29 @@
 body{
     margin: 0;
     padding: 0;
-    background-color:rgba(135, 183, 228, 1)
+    /* background-image: url('b.jpg'); */
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
+    background-color:black
 }
-.left{
+.left, .mid, .placeright{
     display: flex;
-    /* align-items: flex-start; */
     justify-content: flex-start;  
-}
-.mid{
-    display: flex;
-    /* align-items: center; */
-    justify-content: center;
-    
-}
-.placeright{
-    display: flex;
-    /* align-items: flex-end; */
-    justify-content: flex-end;  
 }
 
 /* Edit Task */
 ul li input[type=text] {
     display: none;
-  }
+}
   
-  ul li.editMode input[type=text] {
+ul li.editMode input[type=text] {
     display: inline-block;
 
-  }
+}
   
-  ul li.editMode label {
+ul li.editMode label {
     display: none;
-  }
+}
 .taskcontainer{
     margin: 40px 200px;
     display:flex;
@@ -40,12 +31,18 @@ ul li input[type=text] {
     flex-wrap: wrap;
     /* background-color:rgba(249, 249, 250, 0.95); */
 }
+.mid {
+    font-family: 'Spirax', cursive;
+    font-size: 30px;
+    color: white;
+}
 .taskcontainer #texto {
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 10px;
-    font-size: 16px;
-    /* border: 2px solid #FFF; */
+    font-size: 18px;
+    /* border: 2px solid rgb(20, 21, 26); */
+    font-family: 'Marcellus', serif;
     width: 600px;
   }
   #addtask {
@@ -55,14 +52,16 @@ ul li input[type=text] {
  li  {
     display: flex;
     justify-content: space-between;
-    /* align-items: space-between; */
-    /* margin-top: 30px; */
     list-style-type: none;
     padding: 10px;
     font-size: 16px;
     width: 600px;
     background-color: rgb(255, 255, 255);
     border-bottom: 1px solid black;
+ }
+ li label{
+     font-size: 20px;
+     font-family: 'Marcellus', serif;
  }
  /* li{
      display: flex;
@@ -79,7 +78,7 @@ ul li input[type=text] {
 display: flex;
 flex-direction: row;
 justify-content: space-between;
-background-color:rgba(249, 249, 250, 0.95);
+/* background-color:rgba(249, 249, 250, 0.95); */
 height: 40px;
 }
 /* .updater{
