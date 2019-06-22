@@ -1,5 +1,5 @@
 const { Client } = require('pg')
-const dotenv = require('dotenv').config()
+require('dotenv').config()
 const shortid = require('shortid')
 
 // console.log(process.env.DB_USER)
@@ -10,7 +10,6 @@ const client = new Client({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT
 })
-
 client.connect((err) => {
   if (err) {
     console.error('connection error', err.stack)
@@ -20,7 +19,7 @@ client.connect((err) => {
 })
 
 let getItems = (request, response) => {
-  client.query('SELECT * FROM tasks.item', (error, results) => {
+  client.query('SELECT * FROM todoitems', (error, results) => {
     if (error) {
       throw error
     }
@@ -29,12 +28,12 @@ let getItems = (request, response) => {
 }
 
 let setItem = (request, response) => {
-  // console.log(request.body)
+  console.log(request.body)
   let id = shortid.generate()
   console.log(id)
   const { name, completed, notes, dueDate, priority, priorityId, identifier } = request.body
   const body = { name, id, completed }
-  client.query('INSERT INTO tasks.item (name, completed, notes, dueDate, priority, priorityId, identifier, id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+  client.query('INSERT INTO todoitems (name, completed, notes, dueDate, priority, priorityId, identifier, id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
     [name, completed, notes, dueDate, priority, priorityId, identifier, id], (error, results) => {
       if (error) {
         throw error
@@ -48,27 +47,27 @@ let updateItemState = (request, response) => {
   // const taskId = request.params.id
   let { completed, id } = request.body
   // console.log(id)
-  client.query('UPDATE tasks.item set completed = $1  WHERE id = $2', [completed, id], (error, results) => {
+  client.query('UPDATE todoitems set completed = $1  WHERE id = $2', [completed, id], (error, results) => {
     if (error) {
       throw error
     }
     response.status(201).send(results)
   })
 }
-// let deleteAllItems = (request, response) => {
-//     // const id = request.params.tasksId
-//     // console.log(id)
-//     client.query('DELETE FROM tasks.item', ((error, results, id) => {
-//         if (error) {
-//           throw error
-//         }
-//         response.status(201).json(results)
-//     }))
-// }
+let deleteAllItems = (request, response) => {
+  // const id = request.params.tasksId
+  // console.log(id)
+  client.query('DELETE FROM todoitems', (error, results) => {
+    if (error) {
+      throw error
+    }
+    response.status(201).json(results)
+  })
+}
 let setEditedItem = (request, response) => {
   let { name, id } = request.body
-  // console.log(id)
-  client.query('UPDATE tasks.item set name = $1  WHERE id = $2', [name, id], (error, results) => {
+  console.log(id)
+  client.query('UPDATE todoitems set name = $1  WHERE id = $2', [name, id], (error, results) => {
     if (error) {
       throw error
     }
@@ -77,7 +76,7 @@ let setEditedItem = (request, response) => {
 }
 let setTaskDetails = (request, response) => {
   let { priority, duedate, notes, identifier, id } = request.body
-  client.query('UPDATE tasks.item set priority = $1, duedate = $2, notes = $3, identifier = $4  WHERE id = $5',
+  client.query('UPDATE todoitems set priority = $1, duedate = $2, notes = $3, identifier = $4  WHERE id = $5',
     [priority, duedate, notes, identifier, id], (error, results) => {
       if (error) {
         throw error
@@ -90,7 +89,7 @@ let deleteItem = (request, response) => {
   const id = request.body.id
   console.log(id)
 
-  client.query('DELETE FROM tasks.item WHERE id = $1', [id], (error, results) => {
+  client.query('DELETE FROM todoitems WHERE id = $1', [id], (error, results) => {
     if (error) {
       throw error
     }
@@ -98,4 +97,4 @@ let deleteItem = (request, response) => {
   })
 }
 
-module.exports = { getItems, setItem, updateItemState, setEditedItem, deleteItem, setTaskDetails }
+module.exports = { getItems, setItem, updateItemState, setEditedItem, deleteItem, setTaskDetails, deleteAllItems }

@@ -1,12 +1,11 @@
 'use strict'
-
 const ul = document.getElementById('ul')
 const addButton = document.getElementById('addtask')
 const input = document.getElementById('texto') // new task
 const completedButton = document.getElementById('completed')
 const allItemsButton = document.getElementById('all')
 const incompletedButton = document.getElementById('incompleted')
-// const clearButton = document.getElementById('clear')
+const clearButton = document.getElementById('clear')
 let state
 
 const getAllTasks = async (url) => {
@@ -16,7 +15,7 @@ const getAllTasks = async (url) => {
 }
 
 const start = async function () {
-  state = await getAllTasks('http://localhost:3001/tasks')
+  state = await getAllTasks('http://localhost:3000/tasks')
   displayTask(state)
 }
 
@@ -100,7 +99,7 @@ function Todo (name) {
 }
 
 const addTask = async function (task) {
-  let taskDetails = await saveTask(task, 'http://localhost:3001/tasks/create')
+  let taskDetails = await saveTask(task, 'http://localhost:3000/tasks/create')
   // console.log(taskDetails)
   // console.log(state)
   task.id = taskDetails.id
@@ -122,23 +121,21 @@ const saveTask = async function (task, url) {
   console.log('task added')
   return data
 }
-// // clearButton.addEventListener('click', function () {
-// //   function deleteAll () {
-// //     while (ul.firstChild) {
-// //       ul.removeChild(ul.firstChild)
-// //     }
-// //     const options = {
-// //       method: 'POST',
-// //       headers: {
-// //         'Content-Type': 'application/json'
-// //       }
-// //     }
-// //     fetch('http://localhost:3001/tasks', options)
-// //       .then(res => res.json())
-// //       .then(res => console.log('removed all tasks'))
-// //     // write post
-// //   }
-// // })
+clearButton.addEventListener('click', function () {
+  while (ul.firstChild) {
+    ul.removeChild(ul.firstChild)
+  }
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+  fetch('http://localhost:3000/tasks/deleteall', options)
+    .then(res => res.json())
+    .then(res => console.log('removed all tasks'))
+    // write post
+})
 
 async function checkFunction (e) {
   // console.log(e.target.parentNode.parentNode.id)
@@ -156,7 +153,7 @@ async function checkFunction (e) {
     }
   }
   //  console.log("state-->"+state)
-  saveTask(value, 'http://localhost:3001/tasks/completedstate')
+  saveTask(value, 'http://localhost:3000/tasks/completedstate')
   // console.log('updated completed value to true')
 }
 
@@ -209,7 +206,7 @@ async function editTask (e) {
   for (let item of state) {
     if (item.id === changeTask.id) item.name = label.textContent
   }
-  saveTask(changeTask, 'http://localhost:3001/tasks/updatedtask')
+  saveTask(changeTask, 'http://localhost:3000/tasks/updatedtask')
 }
 
 async function deleteTask () {
@@ -223,27 +220,18 @@ async function deleteTask () {
   }
   console.log(state)
   ul.removeChild(listItem)
-  saveTask(value, 'http://localhost:3001/tasks/deletetask')
+  saveTask(value, 'http://localhost:3000/tasks/deletetask')
 }
 
 const toggleModal = function () {
   var update = document.querySelector('.updateTask')
-  // let list = document.getElementsByTagName('li')
-  // var trigger = document.querySelector('.task-editor')
-  // var id = e.target.parentNode.parentNode.id
   update.classList.toggle('show-modal')
-  // updateVal(id)
-  // console.log(update)
 }
 const updateTask = function (e) {
   toggleModal()
   getValues(e)
 }
-// function windowOnClick (event) {
-//   if (event.target === update) {
-//     toggleModal()
-//   }
-// }
+
 function getValues (e) {
   var id = e.target.parentNode.parentNode.id
   for (let item of state) {
@@ -271,7 +259,7 @@ closeButton.addEventListener('click', async function () {
       updateObj = { priority: item.priority, duedate: item.duedate, notes: item.notes, identifier: item.identifier, id: item.id }
     }
   }
-  saveTask(updateObj, 'http://localhost:3001/tasks/updatedetails')
+  saveTask(updateObj, 'http://localhost:3000/tasks/updatedetails')
   // console.log(e.target.parentNode.parentNode.parentNode)
   // console.log(notes)
   // console.log(dueDate)

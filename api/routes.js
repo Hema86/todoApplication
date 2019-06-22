@@ -1,6 +1,6 @@
 const express = require('express')
 
-let { getItems, setItem, updateItemState, setEditedItem, deleteItem, setTaskDetails } = require('./controllers/query')
+let { getItems, setItem, updateItemState, setEditedItem, deleteItem, setTaskDetails, deleteAllItems } = require('./controllers/query')
 
 const router = express.Router()
 
@@ -10,4 +10,6 @@ router.route('/completedstate').post(updateItemState)
 router.route('/updatedtask').post(setEditedItem)
 router.route('/deletetask').post(deleteItem)
 router.route('/updatedetails').post(setTaskDetails)
+router.route('/deleteall').post(deleteAllItems)
+
 module.exports = router
